@@ -1,0 +1,35 @@
+{
+	"parser": "babel-eslint",
+	"extends": "airbnb",
+	"plugins": [
+		"react",
+		"jsx-a11y",
+		"import"
+	],
+	"env": {
+		"browser": true
+	},
+	"rules": {
+		"react/jsx-indent": 0,
+		"react/jsx-tag-spacing": 0,
+		"no-tabs": 0,
+		"indent": 0,
+		"max-len": [
+			"error",
+			150
+		],
+		"react/jsx-filename-extension": [
+			"error",
+			{
+				"extensions": [
+					".js",
+					".jsx"
+				]
+			}
+		],
+		"react/jsx-indent-props": [
+			"error",
+			4
+		]
+	}
+}
