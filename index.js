@@ -7,7 +7,7 @@ const root = document.getElementById('root');
 // ReactDOM.render(<App/>, root);
 // ReactDOM.hydrate(<App/>, root);
 
-const render = (Component) => {
+const render = (Component) =>  {
 	ReactDOM.render(
 		<AppContainer>
 			<Component/>
@@ -18,7 +18,7 @@ const render = (Component) => {
 
 render(App);
 
-if (module.hot){
+if (module.hot) {
 	module.hot.accept('./App.js', () => {
 		const NextApp = require('./App.js').default; // eslint-disable-line
 		render(NextApp);
