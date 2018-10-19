@@ -7,8 +7,8 @@ const root = document.getElementById('root');
 // ReactDOM.render(<App/>, root);
 // ReactDOM.hydrate(<App/>, root);
 
-const render = (Component) =>  {
-	ReactDOM.render(
+const render = (Component) => {
+	ReactDOM.render (
 		<AppContainer>
 			<Component/>
 		</AppContainer>,
