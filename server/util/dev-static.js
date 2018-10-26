@@ -38,7 +38,7 @@ serverCompiler.outputFileSystem = mfs;
 serverCompiler.watch({}, (err, stats) => {
     if (err) throw err;
     stats = stats.toJson();
-    stats.errors.forEach(err => console.err(err));
+    stats.errors.forEach(err => console.error(err));
     stats.warnings.forEach(warn => console.warn(warn));
 
     // 服务端bundle的路径
@@ -65,7 +65,6 @@ module.exports = function (app) {
 
     app.get('/', (req, res) => {
         getTemplate().then(template => {
-            console.log(template);
             let content = ReactSSR.renderToString(serverBundle);
             res.send(template.replace('<!-- app -->', content));
         });

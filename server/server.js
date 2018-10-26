@@ -1,9 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const favicon = require('serve-favicon');
 const ReactSSR = require('react-dom/server');
 
 const app = express();
+
+// 网站图标
+app.use(favicon(path.join(__dirname,'../icon.ico')));
 
 const isDev = process.env.NODE_ENV === 'development';
 

@@ -1,6 +1,8 @@
 const path = require('path');
+const webpackMerge = require('webpack-merge');
+const baseConfig = require('./webpack.base');
 
-module.exports = {
+module.exports = webpackMerge(baseConfig, {
     mode: 'development',
     // node环境
     target: 'node',
@@ -8,31 +10,8 @@ module.exports = {
         app: path.join(__dirname, '../server.entry.js')
     },
     output: {
-        path: path.join(__dirname, '../dist'),
         filename: 'server.entry.js',
-        // 静态文件
-        publicPath: '/public',
         // 模块加载方案
         libraryTarget: 'commonjs2'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                enforce: "pre",
-                loader: "eslint-loader",
-                exclude: [
-                    path.resolve(__dirname, '../node_modules')
-                ]
-
-            },
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
-            }
-        ]
     }
-};
+});
