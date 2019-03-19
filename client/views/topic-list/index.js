@@ -4,7 +4,6 @@ import { observer, inject } from 'mobx-react';
 import AppState from '../../store/app-state';
 
 @inject('appState') @observer
-
 class TopicList extends React.Component {
     constructor() {
         super();
@@ -29,8 +28,10 @@ class TopicList extends React.Component {
     }
 }
 
+// 声明props 和 类型
+// appState是APPState的一个实例
 TopicList.propTypes = {
-    appState: PropTypes.instanceOf(AppState).isRequired,
+    appState: PropTypes.instanceOf(AppState),
 };
 
 export default TopicList;

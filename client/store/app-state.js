@@ -1,8 +1,11 @@
+/**
+ * 纯前端相关
+ */
 import {
     observable,
     computed,
-    autorun,
     action,
+    autorun,
 } from 'mobx';
 
 class AppState {
@@ -28,12 +31,13 @@ class AppState {
 
 const appState = new AppState();
 
-autorun(() => {
-    console.log(appState.msg);
-});
-
 setInterval(() => {
     appState.add();
 }, 1000);
+
+// 当有数据发生改变，会执行的回调
+autorun(() => {
+    // console.log(appState.count);
+});
 
 export default appState;

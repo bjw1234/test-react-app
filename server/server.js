@@ -29,5 +29,5 @@ if (!isDev) {
 }
 
 app.listen(3000, () => {
-    console.log('app is running at 3000!');
+    console.log('app is running at localhost: 3000!');
 });
