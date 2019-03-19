@@ -41,6 +41,9 @@ if (isDev) {
         overlay: {
             errors: true
         },
+        proxy: {
+            '/api': 'http://localhost:3000'
+        },
     };
     // 插件
     config.plugins.push(
