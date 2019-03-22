@@ -18,6 +18,16 @@ class TopicList extends React.Component {
         this.props.appState.changeName(event.target.value);
     }
 
+    // 异步操作
+    bootstrap() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                this.props.appState.changeName('bootstrap');
+                resolve(true);
+            }, 1000);
+        });
+    }
+
     render() {
         return (
             <div>

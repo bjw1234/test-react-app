@@ -5,10 +5,16 @@ import {
     observable,
     computed,
     action,
-    autorun,
+    // autorun,
 } from 'mobx';
 
 class AppState {
+    // 构造函数初始化数据
+    constructor({ count, name } = { count: 0, name: 'tom' }) {
+        this.count = count;
+        this.name = name;
+    }
+
     @observable count = 0;
 
     @observable name = 'tom';
@@ -27,17 +33,18 @@ class AppState {
     changeName(name) {
         this.name = name;
     }
+
+    toJson() {
+        return {
+            count: this.count,
+            name: this.name,
+        };
+    }
 }
 
-const appState = new AppState();
-
-setInterval(() => {
-    appState.add();
-}, 1000);
-
 // 当有数据发生改变，会执行的回调
-autorun(() => {
-    // console.log(appState.count);
-});
+// autorun(() => {
+//     console.log(appState.count);
+// });
 
-export default appState;
+export default AppState;

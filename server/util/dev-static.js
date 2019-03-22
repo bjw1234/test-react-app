@@ -8,17 +8,20 @@
  */
 const path = require('path');
 const axios = require('axios');
+const ejs = require('ejs');
+const serialize = require('serialize-javascript');
 const webpack = require('webpack');
 const MemoryFs = require('memory-fs');
 const ReactSSR = require('react-dom/server');
 const proxy = require('http-proxy-middleware');
+const bootstrapper = require('react-async-bootstrapper');
 
 const serverConfig = require('../../build/webpack.config.server');
 
 // 获取模板HTML文件
 const getTemplate = () => {
     return new Promise((resolve, reject) => {
-        axios.get('http://localhost:8000/public/index.html')
+        axios.get('http://localhost:8000/public/server.ejs')
             .then(res => resolve(res.data))
             .catch(reject);
     });
@@ -28,7 +31,7 @@ const getTemplate = () => {
  * 获取网页中需要服务端渲染的js
  * 难点：不能直接使用打包出来的文件，而需要监听文件的变化，达到热更新的目的
  */
-let serverBundle;
+let serverBundle, createStoreMap;
 const Module = module.constructor;
 
 const mfs = new MemoryFs();
@@ -54,19 +57,51 @@ serverCompiler.watch({}, (err, stats) => {
     // 必须指定文件名
     m._compile(bundle, 'server.entry.js');
     serverBundle = m.exports.default;
+    createStoreMap = m.exports.createStoreMap;
 });
 
+// 拿到所以stores的json格式数据
+const getStoreState = (stores) => {
+    return Object.keys(stores).reduce((result, storeName) => {
+        result[storeName] = stores[storeName].toJson();
+        return result;
+    }, {});
+};
 
-module.exports = function (app) {
+module.exports = function(app) {
     // 做静态文件代理
     app.use('/public', proxy({
         target: 'http://localhost:8000'
     }));
 
-    app.get('/', (req, res) => {
+    // 当访问任何路径时，都用该路由处理
+    app.get('*', (req, res) => {
         getTemplate().then(template => {
-            let content = ReactSSR.renderToString(serverBundle);
-            res.send(template.replace('<!-- app -->', content));
+            /**修改的内容*/
+            const routerContext = {};
+            const stores = createStoreMap();
+            const app = serverBundle(stores, routerContext, req.url);
+
+            // 异步执行 bootstrap 方法
+            bootstrapper(app).then(() => {
+                const state = getStoreState(stores);
+                let content = ReactSSR.renderToString(app);
+                // 判断是否是重定向 /list
+                if (routerContext.url) {
+                    res.status(302).setHeader('Location', routerContext.url);
+                    res.end();
+                    return;
+                }
+                // 使用ejs引擎去渲染
+                const html = ejs.render(template, {
+                    appString: content,
+                    initialState: serialize(state)
+                });
+                res.send(html);
+
+                /**修改的内容*/
+                // res.send(template.replace('<!-- app -->', content));
+            });
         });
     });
 };
