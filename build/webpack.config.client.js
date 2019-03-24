@@ -7,12 +7,12 @@ const HTMLPlugin = require('html-webpack-plugin');
 let isDev = process.env.NODE_ENV === 'development';
 
 let config = webpackMerge(baseConfig, {
-    mode: 'development',
+    mode: isDev ? 'development' : 'production',
     entry: {
         app: path.join(__dirname, '../index.js')
     },
     output: {
-        filename: '[name]-[hash].js',
+        filename: '[name]-[hash:8].js',
     },
     plugins: [
         new HTMLPlugin({

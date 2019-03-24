@@ -4,10 +4,11 @@ const express = require('express');
 const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const ReactSSR = require('react-dom/server');
+// const ReactSSR = require('react-dom/server');
 const handleLogin = require('./util/handle-login');
 const requestProxy = require('./util/proxy');
 
+const serverRender = require('./util/server-render');
 const isDev = process.env.NODE_ENV === 'development';
 
 const app = express();
@@ -34,21 +35,30 @@ app.use('/api', requestProxy);
 
 
 if (!isDev) {
+    console.log('production mode ...');
     // 同步读取模板HTML文件
-    const template = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8');
+    const template = fs.readFileSync(path.join(__dirname, '../dist/server.ejs'), 'utf8');
     // 具体内容模块
-    const serverEntry = require('../dist/server.entry.js').default;
+    const serverEntry = require('../dist/server.entry.js');
     // 静态文件托管
     app.use('/public', express.static(path.join(__dirname, '../dist')));
-    app.get('/', (req, res) => {
-        let content = ReactSSR.renderToString(serverEntry);
-        res.send(template.replace('<!-- app -->', content));
+    app.get('*', (req, res, next) => {
+        serverRender(serverEntry, template, req, res).catch(next);
+        // let content = ReactSSR.renderToString(serverEntry);
+        // res.send(template.replace('<!-- app -->', content));
     });
 } else {
+    console.log('development mode ...');
     /** 开发环境 */
     const devStatic = require('./util/dev-static');
     devStatic(app);
 }
+
+// 全局错误处理
+app.use((error, req, res, next) => {
+    console.log(error);
+    res.status(500).send(error);
+});
 
 app.listen(3000, () => {
     console.log('app is running at localhost: 3000!');

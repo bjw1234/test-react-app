@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Routes from '../config/router';
+import Routes from '../router/router';
 
 // export default () => <div>hello world!</div>;
 
