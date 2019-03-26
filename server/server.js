@@ -4,7 +4,6 @@ const express = require('express');
 const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-// const ReactSSR = require('react-dom/server');
 const handleLogin = require('./util/handle-login');
 const requestProxy = require('./util/proxy');
 
@@ -30,6 +29,7 @@ app.use(favicon(path.join(__dirname, '../icon.ico')));
 
 // 登录接口代理
 app.use('/api/user', handleLogin);
+
 // 其他接口代理
 app.use('/api', requestProxy);
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { Provider, useStaticRendering } from 'mobx-react';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import JssProvider from 'react-jss/lib/JssProvider';
 import App from './client/views/App';
 import { createStoreMap } from './client/store/store';
 
@@ -11,14 +9,10 @@ useStaticRendering(true);
 
 /** 导出根组件 */
 // export default <App/>;
-export default (stores, routerContext, url, sheetsRegistry, generateClassName, theme, sheetsManager) => (
+export default (stores, routerContext, url) => (
     <Provider {...stores}>
         <StaticRouter context={routerContext} location={url}>
-            <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
-                <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
-                    <App/>
-                </MuiThemeProvider>
-            </JssProvider>
+            <App/>
         </StaticRouter>
     </Provider>
 );
