@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
+import TextField from '@material-ui/core/TextField';
 // 处理标签
 import Helmet from 'react-helmet';
 import AppState from '../../store/app-state';
@@ -51,6 +52,9 @@ class TopicList extends React.Component {
                 </Helmet>
                 <input type="text" onChange={this.onNameChange}/>
                 <div className="txt">{this.props.appState.msg}</div>
+                <TextField standard="true" color="primary">
+                    Hello World
+                </TextField>
             </div>
         );
     }

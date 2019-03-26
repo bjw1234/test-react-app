@@ -35,6 +35,7 @@ app.use('/api', requestProxy);
 
 
 if (!isDev) {
+    /** 生产环境 */
     console.log('production mode ...');
     // 同步读取模板HTML文件
     const template = fs.readFileSync(path.join(__dirname, '../dist/server.ejs'), 'utf8');
@@ -48,8 +49,8 @@ if (!isDev) {
         // res.send(template.replace('<!-- app -->', content));
     });
 } else {
-    console.log('development mode ...');
     /** 开发环境 */
+    console.log('development mode ...');
     const devStatic = require('./util/dev-static');
     devStatic(app);
 }

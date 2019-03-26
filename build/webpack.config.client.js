@@ -27,6 +27,7 @@ let config = webpackMerge(baseConfig, {
 
 // 开发模式
 if (isDev) {
+    config.devtool = '#cheap-module-eval-source-map';
     config.entry = {
         app: [
             'react-hot-loader/patch',

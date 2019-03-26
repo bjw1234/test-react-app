@@ -70,10 +70,6 @@ serverCompiler.watch({}, (err, stats) => {
 
     // 同步读取出来的bundle是一个字符串，string -> 模块 ？
     const bundle = mfs.readFileSync(bundlePath, 'utf-8');
-    // hack
-    // const m = new Module();
-    // 必须指定文件名
-    // m._compile(bundle, 'server.entry.js');
     const m = getModuleFromString(bundle, 'server.entry.js');
     serverBundle = m.exports;
 });
@@ -87,6 +83,9 @@ module.exports = function(app) {
 
     // 当访问任何路径时，都用该路由处理
     app.get('*', (req, res, next) => {
+        if (!serverBundle) {
+            res.send('server is compiler, wait later try again...');
+        }
         getTemplate().then(template => {
             return serverRender(serverBundle, template, req, res);
         }).catch(next);
