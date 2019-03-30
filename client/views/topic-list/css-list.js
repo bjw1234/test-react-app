@@ -4,8 +4,11 @@ export default {
         marginRight: 10,
     },
     reply_count: {
-        color: 'orange',
+        color: '#9e78c0',
         fontSize: 16,
+    },
+    visit_count: {
+        fontSize: 10,
     },
     create_at: {
         marginLeft: 10,

@@ -3,6 +3,7 @@ import {
     observable,
     extendObservable,
     autorun,
+    toJS,
 } from 'mobx';
 
 import model from '../util/model';
@@ -45,9 +46,10 @@ class TopicStore {
     fetchTopics() {
         return new Promise((resolve, reject) => {
             this.syncing = true;
+            this.topics = [];
             model.get('/api/topics', {
                 mdrender: 'false',
-                limit: 3,
+                limit: 10,
             }).then((resp) => {
                 if (resp.success) {
                     resp.data.forEach((topic) => {
@@ -63,6 +65,13 @@ class TopicStore {
                 this.syncing = false;
             });
         });
+    }
+
+    toJson() {
+        return {
+            syncing: this.syncing,
+            topics: toJS(this.topics),
+        };
     }
 }
 

@@ -24,7 +24,6 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
                 <Layout>
                     <Header>
                         <MainAppBar/>
@@ -38,7 +37,6 @@ class App extends React.Component {
                     <Footer>Footer</Footer>
                     <TestApi/>
                 </Layout>
-            </div>
         );
     }
 }

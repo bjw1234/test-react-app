@@ -107,8 +107,8 @@ class TopicList extends React.Component {
                                     <span>
                                         <span className="loginname" style={style.loginname}>{item.author.loginname}</span>
                                         <span className="reply_count" style={style.reply_count}>{item.reply_count}</span>
-                                        /
-                                        <span className="visit_count">{item.visit_count}</span>
+                                        &nbsp;/&nbsp;
+                                        <span className="visit_count" style={style.visit_count}>{item.visit_count}</span>
                                         <span className="create_at" style={style.create_at}>
                                             创建时间：
                                             {item.create_at ? new Date(item.create_at).toLocaleDateString() : ''}
