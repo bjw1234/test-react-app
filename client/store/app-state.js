@@ -9,15 +9,15 @@ import {
 } from 'mobx';
 
 class AppState {
+    @observable count = 0;
+
+    @observable name = 'tom';
+
     // 构造函数初始化数据
     constructor({ count, name } = { count: 0, name: 'tom' }) {
         this.count = count;
         this.name = name;
     }
-
-    @observable count = 0;
-
-    @observable name = 'tom';
 
     @computed
     get msg() {
@@ -30,8 +30,11 @@ class AppState {
     }
 
     @action
-    changeName(name) {
-        this.name = name;
+    changeName() {
+        setTimeout(() => {
+            console.log(this.name);
+            this.name = this.name + 'xxx'; // eslint-disable-line
+        }, 1500);
     }
 
     toJson() {
