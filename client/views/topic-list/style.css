@@ -1,3 +1,7 @@
+.topic_list {
+    min-height: 200px;
+}
+
 .ant-list-item {
     cursor: pointer;
 }

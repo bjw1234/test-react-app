@@ -4,7 +4,7 @@ import { Button, Row, Col } from 'antd';
 
 const logoStyle = {
     width: 155,
-    marginTop: -6
+    marginTop: -6,
 };
 
 class AppBar extends React.Component {

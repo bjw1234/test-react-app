@@ -25,6 +25,7 @@ class TopicList extends React.Component {
             page: 1,
         };
         this.onMenuSelect = this.onMenuSelect.bind(this);
+        this.onListItemClick = this.onListItemClick.bind(this);
         this.onPaginationChange = this.onPaginationChange.bind(this);
     }
 
@@ -58,6 +59,12 @@ class TopicList extends React.Component {
         this.props.history.push({
             pathname: '/list',
             search: `?tab=${this.getTab()}&page=${pageNumber}`,
+        });
+    }
+
+    onListItemClick(item) {
+        this.props.history.push({
+            pathname: `/detail/${item.id}`,
         });
     }
 
@@ -119,11 +126,12 @@ class TopicList extends React.Component {
                     }
                 </Menu>
                 <List
+                    className="topic_list"
                     itemLayout="vertical"
                     dataSource={topics}
                     loading={syncing}
                     renderItem={item => (
-                        <List.Item>
+                        <List.Item onClick={() => this.onListItemClick(item)}>
                             <List.Item.Meta
                                 avatar={
                                     <Avatar src={item.author.avatar_url}/>

@@ -10,6 +10,6 @@ export default () => [
     // exact 精确匹配
     <Route key="key-index" path="/" render={() => <Redirect to="/list"/>} exact/>,
     <Route key="key-list" path="/list" component={TopicList}/>,
-    <Route key="key-detail" path="/detail" component={TopicDetail}/>,
+    <Route key="key-detail" path="/detail/:id" component={TopicDetail}/>,
     <Route key="key-test" path="/test" component={TestApi}/>,
 ];
