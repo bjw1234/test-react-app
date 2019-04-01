@@ -4,13 +4,13 @@ import { inject, observer } from 'mobx-react';
 import querySting from 'query-string';
 import { trace } from 'mobx'; // eslint-disable-line
 import {
-    Avatar, List, Menu, Tag,
+    Avatar, List, Menu, Tag, Pagination,
 } from 'antd';
 // 处理标签
 import Helmet from 'react-helmet';
 import AppState from '../../store/app-state';
-import './style.css';
 import { tabs } from '../../util/schema-define';
+import './style.css';
 
 @inject((stores) => {
     return {
@@ -21,7 +21,11 @@ import { tabs } from '../../util/schema-define';
 class TopicList extends React.Component {
     constructor() {
         super();
+        this.state = {
+            page: 1,
+        };
         this.onMenuSelect = this.onMenuSelect.bind(this);
+        this.onPaginationChange = this.onPaginationChange.bind(this);
     }
 
     componentDidMount() {
@@ -32,7 +36,14 @@ class TopicList extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.location.search !== this.props.location.search) {
-            this.props.topicStore.fetchTopics(this.getTab(nextProps));
+            const curPage = this.getPage(nextProps.location.search) || '1';
+            this.props.topicStore.fetchTopics(
+                this.getTab(nextProps),
+                curPage,
+            );
+            this.setState({
+                page: parseInt(curPage, 10),
+            });
         }
     }
 
@@ -43,16 +54,29 @@ class TopicList extends React.Component {
         });
     }
 
+    onPaginationChange(pageNumber) {
+        this.props.history.push({
+            pathname: '/list',
+            search: `?tab=${this.getTab()}&page=${pageNumber}`,
+        });
+    }
+
     getTab(props) {
         const prop = props || this.props;
         const query = querySting.parse(prop.location.search);
         return query.tab || 'all';
     }
 
+    getPage(search) {
+        const { page } = querySting.parse(search) || 1;
+        return page;
+    }
+
     getTagColor(item) {
         if (item.top) return '#40a6ff';
         if (item.good) return tabs.good.color;
-        return tabs[item.tab].color;
+        const tab = tabs[item.tab];
+        return tab ? tab.color : '';
     }
 
     getTagText(item) {
@@ -129,6 +153,12 @@ class TopicList extends React.Component {
                             />
                         </List.Item>
                     )}
+                />
+                <Pagination
+                    showQuickJumper
+                    current={this.state.page}
+                    total={730}
+                    onChange={this.onPaginationChange}
                 />
             </div>
         );

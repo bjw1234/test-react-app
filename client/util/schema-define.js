@@ -39,7 +39,7 @@ export const tabs = {
         color: 'purple',
     },
     dev: {
-        text: '客户端测试',
+        text: '测试',
         color: 'lime',
     },
 };
