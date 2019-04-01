@@ -1,0 +1,29 @@
+.ant-list-item {
+    cursor: pointer;
+}
+
+.ant-list-item:hover {
+    background-color: #e4e6eb;
+}
+
+.item_title:hover {
+    text-decoration: underline;
+}
+
+.login_name {
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.reply_count {
+    color: #9e78c0;
+    font-size: 16px;
+}
+
+.visit_count {
+    font-size: 10px;
+}
+
+.create_at {
+    margin-left: 10px;
+}

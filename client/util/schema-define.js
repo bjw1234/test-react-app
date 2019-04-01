@@ -17,6 +17,29 @@ export const topicSchema = {
     replies: [],
 };
 
-export default {
-    topicSchema,
+export const tabs = {
+    all: {
+        text: '全部',
+        color: '',
+    },
+    ask: {
+        text: '问答',
+        color: 'red',
+    },
+    share: {
+        text: '分享',
+        color: 'green',
+    },
+    job: {
+        text: '招聘',
+        color: 'blue',
+    },
+    good: {
+        text: '精华',
+        color: 'purple',
+    },
+    dev: {
+        text: '客户端测试',
+        color: 'lime',
+    },
 };

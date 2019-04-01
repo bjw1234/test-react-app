@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
+import querySting from 'query-string';
 import { trace } from 'mobx'; // eslint-disable-line
 import {
     Avatar, List, Menu, Tag,
@@ -8,7 +9,8 @@ import {
 // 处理标签
 import Helmet from 'react-helmet';
 import AppState from '../../store/app-state';
-import style from './css-list';
+import './style.css';
+import { tabs } from '../../util/schema-define';
 
 @inject((stores) => {
     return {
@@ -19,31 +21,44 @@ import style from './css-list';
 class TopicList extends React.Component {
     constructor() {
         super();
-        this.state = {
-            tabIndex: '0',
-        };
         this.onMenuSelect = this.onMenuSelect.bind(this);
     }
 
     componentDidMount() {
+        const tab = this.getTab();
         // fetch topicStore中的数据
-        this.props.topicStore.fetchTopics();
+        this.props.topicStore.fetchTopics(tab);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.location.search !== this.props.location.search) {
+            this.props.topicStore.fetchTopics(this.getTab(nextProps));
+        }
     }
 
     onMenuSelect({ key }) {
-        this.setState({
-            tabIndex: key,
+        this.props.history.push({
+            pathname: '/list',
+            search: `?tab=${key}`,
         });
     }
 
-    getStyleByTab(tab) {
-        const obj = {
-            ask: 'red',
-            share: 'green',
-            job: 'blue',
-            good: 'purple',
-        };
-        return obj[tab];
+    getTab(props) {
+        const prop = props || this.props;
+        const query = querySting.parse(prop.location.search);
+        return query.tab || 'all';
+    }
+
+    getTagColor(item) {
+        if (item.top) return '#40a6ff';
+        if (item.good) return tabs.good.color;
+        return tabs[item.tab].color;
+    }
+
+    getTagText(item) {
+        if (item.top) return '置顶';
+        if (item.good) return '精华';
+        return tabs[item.tab].text;
     }
 
     // 异步操作
@@ -60,6 +75,7 @@ class TopicList extends React.Component {
         trace();
         const { topicStore } = this.props;
         const { topics, syncing } = topicStore;
+
         return (
             <div style={{ paddingRight: 20 }}>
                 <Helmet>
@@ -67,25 +83,16 @@ class TopicList extends React.Component {
                     <meta name="description" content="this is description meta."/>
                     <link/>
                 </Helmet>
-                <Menu mode="horizontal" onSelect={this.onMenuSelect} defaultSelectedKeys={[this.state.tabIndex]}>
-                    <Menu.Item key="0">
-                        全部
-                    </Menu.Item>
-                    <Menu.Item key="1">
-                        精华
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                        分享
-                    </Menu.Item>
-                    <Menu.Item key="3">
-                        问答
-                    </Menu.Item>
-                    <Menu.Item key="4">
-                        招聘
-                    </Menu.Item>
-                    <Menu.Item key="5">
-                        客户端测试
-                    </Menu.Item>
+                <Menu
+                    mode="horizontal"
+                    onSelect={this.onMenuSelect}
+                    defaultSelectedKeys={[this.getTab()]}
+                >
+                    {
+                        Object.keys(tabs).map((key) => {
+                            return <Menu.Item key={key}>{tabs[key].text}</Menu.Item>;
+                        })
+                    }
                 </Menu>
                 <List
                     itemLayout="vertical"
@@ -99,19 +106,23 @@ class TopicList extends React.Component {
                                 }
                                 title={(
                                     <span>
-                                        <Tag color={this.getStyleByTab(item.tab)}>{item.tab}</Tag>
-                                        <a href="https://ant.design">{item.title}</a>
+                                        <Tag
+                                            color={this.getTagColor(item)}
+                                        >
+                                            {this.getTagText(item)}
+                                        </Tag>
+                                        <span className="item_title">{item.title}</span>
                                     </span>
                                 )}
                                 description={(
                                     <span>
-                                        <span className="loginname" style={style.loginname}>{item.author.loginname}</span>
-                                        <span className="reply_count" style={style.reply_count}>{item.reply_count}</span>
-                                        &nbsp;/&nbsp;
-                                        <span className="visit_count" style={style.visit_count}>{item.visit_count}</span>
-                                        <span className="create_at" style={style.create_at}>
-                                            创建时间：
-                                            {item.create_at ? new Date(item.create_at).toLocaleDateString() : ''}
+                                        <span className="login_name">{item.author.loginname}</span>
+                                        <span className="reply_count">{item.reply_count}</span>
+                                        /
+                                        <span className="visit_count">{item.visit_count}</span>
+                                        <span className="create_at">
+                                            创建时间:
+                                            {item.create_at && new Date(item.create_at).toLocaleDateString()}
                                         </span>
                                     </span>
                                 )}
@@ -129,6 +140,11 @@ class TopicList extends React.Component {
 TopicList.wrappedComponent.propTypes = {
     appState: PropTypes.instanceOf(AppState),
     topicStore: PropTypes.object.isRequired,
+};
+
+TopicList.propTypes = {
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object,
 };
 
 export default TopicList;

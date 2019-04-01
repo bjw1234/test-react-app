@@ -1,7 +1,9 @@
 import React from 'react';
 import { Layout } from 'antd';
+import Routes from '../router/router';
+// import { Link } from 'react-router-dom';
 import MainAppBar from './layout/app-bar';
-import TopicList from './topic-list/index';
+// import TopicList from './topic-list/index';
 import TestApi from './test-api/test-api';
 
 const {
@@ -10,10 +12,6 @@ const {
     Content,
     Footer,
 } = Layout;
-
-
-// import { Link } from 'react-router-dom';
-// import Routes from '../router/router';
 
 const contentStyle = { padding: '15px 50px' };
 
@@ -24,19 +22,19 @@ class App extends React.Component {
 
     render() {
         return (
-                <Layout>
-                    <Header>
-                        <MainAppBar/>
-                    </Header>
-                    <Layout style={contentStyle}>
-                        <Content>
-                            <TopicList/>
-                        </Content>
-                        <Sider>Sider</Sider>
-                    </Layout>
-                    <Footer>Footer</Footer>
-                    <TestApi/>
+            <Layout>
+                <Header>
+                    <MainAppBar/>
+                </Header>
+                <Layout style={contentStyle}>
+                    <Content>
+                        <Routes/>
+                    </Content>
+                    <Sider>Sider</Sider>
                 </Layout>
+                <Footer>Footer</Footer>
+                <TestApi/>
+            </Layout>
         );
     }
 }
